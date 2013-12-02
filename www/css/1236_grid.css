@@ -1,0 +1,76 @@
+/*	SimpleGrid - a fork of CSSGrid by Crowd Favorite (https://github.com/crowdfavorite/css-grid)
+ *	http://simplegrid.info
+ *	by Conor Muirhead (http://conor.cc) of Early LLC (http://earlymade.com)	
+ *  License: http://creativecommons.org/licenses/MIT/	*/
+
+/* Containers */
+body { font-size: 1.125em; }
+.grid{ width:1206px; }
+
+/* 6-Col Grid Sizes */
+.slot-0,.slot-1,.slot-2,.slot-3,.slot-4,.slot-5{ width:176px; } /* Sixths */
+.slot-0-1,.slot-1-2,.slot-2-3,.slot-3-4,.slot-4-5{ width:382px; } /* Thirds */
+.slot-0-1-2-3,.slot-1-2-3-4,.slot-2-3-4-5{ width:794px; } /* Two-Thirds */
+.slot-0-1-2-3-4,.slot-1-2-3-4-5{ width:1000px; } /* Five-Sixths */
+
+/* 4-Col Grid Sizes */
+.slot-6,.slot-7,.slot-8,.slot-9{ width:279px; } /* Quarters */
+.slot-6-7-8,.slot-7-8-9{ width:897px; } /* Three-Quarters */
+
+/* 6-Col/4-Col Shared Grid Sizes */
+.slot-0-1-2,.slot-1-2-3,.slot-2-3-4,.slot-3-4-5, .slot-6-7,.slot-7-8,.slot-8-9{ width:588px; } /* Halves */
+    #galleria{height:760px}
+
+.galleria-thumb-nav-left-ff, .galleria-thumb-nav-right-ff {
+	background-image: url(/js/themes/classic/arrow-right-ff.png);
+	background-repeat: no-repeat;
+	left:auto;
+	height:55px;
+	background-color:#000;
+	cursor:pointer;
+	width:20px;
+	z-index:5;
+	color:#333;
+	text-shadow:0 1px 0 #fff;
+	display:inline;
+	position:absolute;
+	top:36px;
+	right:-8px;
+}
+.galleria-thumb-nav-left:hover, .galleria-thumb-nav-right:hover{
+	background-color:#000;
+}
+.galleria-thumb-nav-left-ff {
+	background-image: url(/js/themes/classic/arrow-left.png);
+	display:block;
+	position:absolute;
+	top:37px;
+	left:-4px;
+}
+.galleria-thumb-nav-left-f, .galleria-thumb-nav-right-f {
+	background-image: url(/js/themes/classic/arrow-right-ff.png);
+	background-repeat: no-repeat;
+	left: auto;
+	height:55px;
+	background-color:#000;
+	cursor:pointer;
+	width:7px;
+	z-index:5;
+	color:#333;
+	text-shadow:0 1px 0 #fff;
+	display:inline;
+	position:absolute;
+	top:36px;
+	right:0px;
+	border:2px red;
+}
+.galleria-thumb-nav-right-f {
+	right:18px;
+}
+.galleria-thumb-nav-left-f {
+	background-image: url(/js/themes/classic/arrow-left.png);
+	display:block;
+	position:absolute;
+	top:37px;
+	left:15px;
+}

@@ -1,0 +1,24 @@
+.formLabel {
+    width: 100px;
+	display: inline-block;
+    font:80%/1 sans-serif;
+}
+.formField {
+    margin-bottom: 5px;
+}
+form fieldset {
+    padding: 1em;
+    font:80%/1 sans-serif;
+	width: 300px;
+    }
+form label {
+    float:left;
+    width:25%;
+    margin-right:0.5em;
+    padding-top:0.2em;
+    text-align:right;
+    font-weight:bold;
+}
+#dialog-confirm p{
+	font-size: 12px;
+}
