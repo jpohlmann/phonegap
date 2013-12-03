@@ -320,10 +320,10 @@ SlideViewController = function() {
                         setTimeout(function(){SlideViewController.slidePull();}, 3000);
                     });
                     this.socket.on('activityEnd', function(){
-                        window.location.href='/arraylearn/slide-view/no-activity-running';
+                        window.location.href='noactivity.html';
                     });
                     this.socket.on('activityHasStopped', function(){
-                        window.location.href='/arraylearn/slide-view/no-activity-running';
+                        window.location.href='noactivity.html';
                 });
                     this.socket.on('refreshClientDevices', function(){
                         var rand = parseInt(Math.floor((Math.random()*9)+1)) + 1000; //randomize up to 10 seconds
