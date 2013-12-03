@@ -475,6 +475,25 @@ div#dialog{
         padding: 4px 0 0 0px;
     }
     .well { padding: 6px; }
+    #hide-slide-container, #hide-slide-container-q { right: 52%; }
+    .ui-radio .ui-btn,
+    .ui-checkbox .ui-btn {
+        width: 100%;
+    }
+    .checkbox {
+        padding-left: 10px;
+        width: 100%;
+    }
+    #user_feedback {
+        width: 105%;
+    }
+    #data_submit {
+        margin-left: 12px;
+        width: 100%;
+    }
+    hr {
+        margin: 2px 0;
+    }
 }
 @media (min-width: 768px) and (max-width: 860px) {
    #priority-left-column-container {
@@ -486,7 +505,7 @@ div#dialog{
         width: 45%;
     }
     .well { padding: 8px; }
-
+    #faculty_question .controls { margin-left: 1%; }
 }
 #sortable1, #sortable2 { list-style-type: none; margin: 0; padding: 0 0 2.5em; float: left; margin-right: 10px; }
 #sortable1 li, #sortable2 li { margin: 0 5px 5px 5px; padding: 5px; font-size: 1.2em; width: 120px; }

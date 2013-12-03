@@ -139,6 +139,9 @@ $( document ).ready(function() {
                 window.location.href = "/";
             }, rand);
         });      
+		socket.on('activityHasStopped', function(){
+			window.location.href='/arraylearn/slide-view/no-activity-running';
+		});
     }, 1000);
 });
 </script>
@@ -240,10 +243,10 @@ $(document).ready(function() {
 				<input type="hidden" name="activity_id" id="activity_id">
 				<input type="hidden" name="image" id="imageData" value="">
 
-				<div id="wPaint" class="pull-left"></div>
-				<div class="span3">
-	             	<input type="submit" class="btn btn-primary btn-large btn-block" id="saveButton" value="Save Stylus Note">
-	             	<input type="button" class="btn btn-small btn-block" id="cancelButton" value="Cancel" style="margin-top: 12px;">
+				<div id="wPaint"></div>
+				<div class="clear span8 offset3 mediumtopmargin">
+	             	<input type="button" class="btn btn-large span2" id="cancelButton" value="Cancel">
+	             	<input type="submit" class="btn btn-primary btn-large span4" id="saveButton" value="Save Stylus Note">
              	</div>
 				</fieldset>
 	            </form>

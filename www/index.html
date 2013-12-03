@@ -139,23 +139,25 @@ $(document).ready(function() {
     <div id="control-container">
         {{#if allow_faculty_question}}
             <a href="#" class="btn btn-block btn-large" id="facultyQuestionButton">
-                <i class="array-icon array-ask-gray"></i>
-                <span class="hide-btn-name"> Ask a Question</span>
+                <i class="array-icon {{takeSlideNoteIcon}}"></i>
+                <span class="hide-btn-name"> {{takeSlideNoteCustom}}</span>
             </a>
         {{/if}}
-        {{#if allow_faculty_question}}
+        {{#if allow_slide_note}}
             <a href="#" class="btn btn-block btn-large" id="slideNoteButton">
-                <i class="array-icon array-take-note-gray"></i>
-                <span class="hide-btn-name"> Take Slide Note</span>
+                <i class="array-icon {{takeSlideNoteIcon}}"></i>
+                <span class="hide-btn-name"> {{takeSlideNoteCustom}}</span>
             </a>
+        {{/if}}
+        {{#if allow_stylus_note}}
             <a href="#" class="btn btn-block btn-large hidden-phone" id="slideNoteButtonStylus">
-                <i class="array-icon array-stylus-note-gray"></i>
-                <span class="hide-btn-name"> Take Stylus Note</span>
+                <i class="array-icon {{takeStylusNoteIcon}}"></i>
+                <span class="hide-btn-name"> {{takeStylusNoteCustom}}</span>
             </a>
         {{/if}}
         <a href="#" class="btn btn-block btn-large" onclick="window.location.href = index.html">
-            <i class="array-icon array-refresh-gray"></i>
-            <span class="hide-btn-name"> Refresh Page</span>
+            <i class="array-icon {{refreshPageIcon}}"></i>
+            <span class="hide-btn-name"> {{refreshPageCustom}}</span>
         </a>
     </div><!--/control-container-->
 </script>
@@ -242,8 +244,9 @@ $(document).ready(function() {
 	<!-- slide wrapper -->
 	<div class="row-fluid">
 		<div class="span5 negativelargertopmargin" id="changeMargin">
+			{{#if allow_stylus_notes}}
 			<h2 class="pull-left">Note <span class="regularfont hidden-phone"><a href="#" id="stylus-link">Take note with Stylus &raquo;</a></span></h2>
-			<!-- <i class="micon-flag pull-right largepadding"></i> -->
+			{{/if}}
 			<form enctype="multipart/form-data" name="slide_note" id="slide_note" method="POST" class="clear">
 				<fieldset>
 					<div class="form-group">
@@ -359,5 +362,12 @@ $(document).ready(function() {
 <div id="notequestiondiv"></div>
 <script src="js/jquery-ui.min.js"></script>
 <script src="js/jquery-ui-touch-punch.js"></script>
+<script>
+$(window).load(function() {
+    if (SlideViewController.settings.toggleFullscreen == true) {
+        $( "#fullScreen" ).trigger('click');
+    }
+});
+</script>
 </body>
 </html>
