@@ -64,6 +64,16 @@ var displayFormFields = function()
 			loginSettings = $.parseJSON(response.responseText);
 		}
 	});
+	if (loginSettings.redirect) {
+		if (loginSettings.location == 'no-activity-running') {
+			window.location.href = 'noactivity.html';
+		}
+		if (loginSettings.location == 'view') {
+			$.cookie("registration_id", loginSettings.registration_id);
+			$.cookie("activity_id", loginSettings.activity_id);
+			window.location.href = 'index.html';
+		}
+	}
 	loginSettings.display_feedback = false;
 	if (loginSettings.feedback != null) {
 		loginSettings.display_feedback = true;
