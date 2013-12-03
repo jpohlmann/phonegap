@@ -36,7 +36,7 @@
 		<script src="js/jquery_speed.js"></script>
 		<script src="js/jquery.cookie.js"></script>
     </head>
-    <body>
+    <body onload="testLogin()">
 <script src="js/arraylearn/SlideViewController.js"></script>
 <script type="text/javascript">
 function testLogin() {
@@ -46,7 +46,6 @@ function testLogin() {
 }
 var socket_port = 0;
 var socket_host = '';
-testLogin();
 $.ajax({
     url: "http://arraylearn.com/arraylearn/dashboard/get-socket-settings",
     type: "GET",
