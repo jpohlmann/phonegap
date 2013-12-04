@@ -39,9 +39,12 @@
     <body>
 <script src="js/arraylearn/SlideViewController.js"></script>
 <script type="text/javascript">
-if ($.cookie("registration_id") == null) {
-	window.location.href = 'login.html';
+function testLogin() {
+	if ($.cookie("registration_id") == null) {
+		window.location.href = 'login.html';
+	}
 }
+document.addEventListener("deviceready", testLogin, false);
 var socket_port = 0;
 var socket_host = '';
 $.ajax({
