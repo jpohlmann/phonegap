@@ -46,7 +46,7 @@ $.getScript('http://'+socket_host+':'+socket_port+'/socket.io/socket.io.js');
 
 $(document).ready(function(){
     attemptConnection();
-	//displayFormFields();
+	displayFormFields();
     $('#submitButton').click(function(e){
         e.preventDefault();
 		$.ajax({
@@ -86,7 +86,7 @@ var displayFormFields = function()
 		}
 		if (loginSettings.location == 'view') {
 			$.cookie("registration_id", loginSettings.registration_id);
-			$.cookie("activity_id", loginSettings.activity_id);
+			$.cookie("activity_id", loginSettings.activityUniqueId);
 			window.location.href = 'index.html';
 		}
 	}
@@ -207,7 +207,6 @@ div#feedback{
 }
 
 </style>
-TEST
 <link rel="stylesheet" type="text/css" href="http://arraylearn.com/arraylearn/slide-view/css">
 
 <!-- Login View -->
