@@ -40,6 +40,7 @@
 <script src="js/arraylearn/SlideViewController.js"></script>
 <script type="text/javascript">
 function testLogin() {
+	alert($.cookie("registration_id"));
 	if (($.cookie("registration_id") == null) || ($.cookie("registration_id") == undefined)) {
 		window.location.href = 'login.html';
 	}
