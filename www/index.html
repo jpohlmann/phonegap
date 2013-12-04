@@ -42,10 +42,10 @@
 function testLogin() {
 	alert($.cookie("registration_id"));
 	if (($.cookie("registration_id") == null) || ($.cookie("registration_id") == undefined)) {
+		alert('in here');
 		window.location.href = 'login.html';
 	}
 }
-document.addEventListener("deviceready", testLogin, false);
 var socket_port = 0;
 var socket_host = '';
 $.ajax({
@@ -83,6 +83,7 @@ SlideViewController.render();
 <script type="text/javascript" src="js/arraylearn/ChartingController.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
+	document.addEventListener("deviceready", testLogin, false);
     SlideViewController.slidePull();
     SlideViewController.displayRating();
     SlideViewController.displaySidebar();
