@@ -36,15 +36,12 @@
 		<script src="js/jquery_speed.js"></script>
 		<script src="js/jquery.cookie.js"></script>
     </head>
-    <body onload="testLogin()">
+    <body>
 <script src="js/arraylearn/SlideViewController.js"></script>
 <script type="text/javascript">
-function testLogin() {
-	if ($.cookie("registration_id") == null) {
-		window.location.href = 'login.html';
-	}
+if ($.cookie("registration_id") == null) {
+	window.location.href = 'login.html';
 }
-testLogin();
 var socket_port = 0;
 var socket_host = '';
 $.ajax({
