@@ -77,7 +77,6 @@ var displayFormFields = function()
 		type: "GET",
 		async: false,
 		complete: function(response){
-			alert(response.responseText);
 			loginSettings = $.parseJSON(response.responseText);
 		}
 	});
@@ -208,7 +207,6 @@ div#feedback{
 }
 
 </style>
-TEST
 <link rel="stylesheet" type="text/css" href="http://arraylearn.com/arraylearn/slide-view/css">
 
 <!-- Login View -->

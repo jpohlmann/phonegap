@@ -139,17 +139,17 @@ $(document).ready(function() {
     <div id="control-container">
         {{#if allow_faculty_question}}
             <a href="#" class="btn btn-block btn-large" id="facultyQuestionButton">
-                <i class="array-icon {{takeSlideNoteIcon}}"></i>
-                <span class="hide-btn-name"> {{takeSlideNoteCustom}}</span>
+                <i class="array-icon {{askAQuestionIcon}}"></i>
+                <span class="hide-btn-name"> {{askAQuestionCustom}}</span>
             </a>
         {{/if}}
-        {{#if allow_slide_note}}
+        {{#if allow_slide_notes}}
             <a href="#" class="btn btn-block btn-large" id="slideNoteButton">
                 <i class="array-icon {{takeSlideNoteIcon}}"></i>
                 <span class="hide-btn-name"> {{takeSlideNoteCustom}}</span>
             </a>
         {{/if}}
-        {{#if allow_stylus_note}}
+        {{#if allow_stylus_notes}}
             <a href="#" class="btn btn-block btn-large hidden-phone" id="slideNoteButtonStylus">
                 <i class="array-icon {{takeStylusNoteIcon}}"></i>
                 <span class="hide-btn-name"> {{takeStylusNoteCustom}}</span>

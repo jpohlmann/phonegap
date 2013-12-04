@@ -103,6 +103,13 @@ SlideViewController = function() {
      * @var boolean
      */
     this.allow_slide_notes = true;
+    
+    /**
+     * Allow submitting stylus notes
+     * 
+     * @var boolean
+     */
+    this.allow_stylus_notes = true;
 
     /**
      * Buttons
@@ -149,6 +156,7 @@ SlideViewController = function() {
             SlideViewController.settings = response.settings;
             SlideViewController.allow_faculty_question = response.allow_faculty_question;
             SlideViewController.allow_slide_notes = response.allow_slide_notes;
+            SlideViewController.allow_stylus_notes = response.allow_stylus_notes;
             SlideViewController.current_slide_url = response.slide_url;
             SlideViewController.current_slide_type = response.type;
             SlideViewController.question_params = response.question_params;
@@ -219,12 +227,13 @@ SlideViewController = function() {
      */
     this.displaySidebar = function()
     {
-        var config = {};
+        var config = this.settings;
         config.buttons = this.buttons;
         config.logo = 'img/logo.png';
         config.logotext = 'Array Learning';
         config.allow_faculty_question = this.allow_faculty_question;
         config.allow_slide_notes = this.allow_slide_notes;
+        config.allow_stylus_notes = this.allow_stylus_notes;
         var template_source = $("#sidebar-template").html();
         var compiled = Handlebars.compile(template_source);
         $('#hideFS').html(compiled(config));
