@@ -54,7 +54,7 @@
 <script type="text/javascript" src="js/handlebars-v1.1.2.js"></script>
 <script type="text/javascript">
 if ($.cookie("registration_id") == null) {
-	window.location.href = 'login.html';
+	window.location.href = 'index.html';
 }
 (function($) {
     $.QueryString = (function(a) {
@@ -200,14 +200,14 @@ $(document).ready(function() {
             $('#noteSuccessModal').modal('hide');
 			$('.control-group').removeClass('error');
 			$('span.help-block').hide();
-    	    window.location.href = 'index.html';
+    	    window.location.href = 'view.html';
     	}, 3000);
 	});
     $('#cancelButton').on('click', function(){
-        window.location.href='index.html';
+        window.location.href='view.html';
     });
     $('#slideNote').on('click', function(){
-        window.location.href='index.html#slideNote';
+        window.location.href='view.html#slideNote';
     });
 	var wp = $("#wPaint").wPaint({
 		fillStyle: '#E01B1B',
@@ -273,7 +273,7 @@ $(document).ready(function() {
 		<p>Your note has been saved. You may take another note by clicking the button again.</p>
 	</div>
 	<div class="modal-footer">
-		<a href="index.html" class="btn" data-dismiss="modal">Dismiss</a>
+		<a href="view.html" class="btn" data-dismiss="modal">Dismiss</a>
 	</div>
 </div>
 </body>

@@ -12,42 +12,23 @@
 		<script type="text/javascript" src="phonegap.js"></script>
 		<script type="text/css" src="css/720_grid.css"></script>
 		<script type="text/javascript" src="js/html5.js"></script>
-        <link href="css/base.css" media="screen" rel="stylesheet" type="text/css">
-		<link href="css/720_grid.css" media="screen and (min-width: 720px)" rel="stylesheet" type="text/css">
-		<link href="css/986_grid.css" media="screen and (min-width: 986px)" rel="stylesheet" type="text/css">
-		<link href="css/1236_grid.css" media="screen and (min-width: 1236px)" rel="stylesheet" type="text/css">		
-		<link rel="stylesheet" href="css/jquery.mobile-1.3.1.min.css" />
-
-		<link href="css/bootstrap.min.css" rel="stylesheet">
-		<link href="css/bootstrap-responsive.min.css" rel="stylesheet">
-
-		<link href="css/style.css" rel="stylesheet" id="styleCss">
-		<link href="css/mobile.css" rel="stylesheet" id="mobileCss">
-
-		<script src="js/jquery.min.js"></script>
-		<!-- Prevent jqm from adding classes to specific form elements. -->
-		<script>
-			$(document).bind('mobileinit',function(){
-				$.mobile.page.prototype.options.keepNative = "#keepNative select, #keepNative input, #keepNative textarea";
-			});
-		</script>
-		<script src="js/jquery.mobile-1.3.1.min.js"></script>
-		<script src="js/bootstrap.min.js"></script>
-		<script src="js/jquery_speed.js"></script>
-		<script src="js/jquery.cookie.js"></script>
+<link href="css/jquery.mobile-1.3.1.min.css" media="screen" rel="stylesheet" type="text/css">
+<link href="css/720_grid.css" media="screen and (min-width: 720px)" rel="stylesheet" type="text/css">
+<link href="css/986_grid.css" media="screen and (min-width: 986px)" rel="stylesheet" type="text/css">
+<link href="css/1236_grid.css" media="screen and (min-width: 1236px)" rel="stylesheet" type="text/css">
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+<link href="css/mobile.css" rel="stylesheet">
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery.cookie.js"></script>
+<script type="text/javascript" src="phonegap.js"></script>
+<script type="text/javascript" src="js/handlebars-v1.1.2.js"></script>
     </head>
     <body>
-<script src="js/arraylearn/SlideViewController.js"></script>
 <script type="text/javascript">
-function testLogin() {
-try {
-	if (($.cookie("registration_id") == null) || ($.cookie("registration_id") == undefined)) {
-		window.location.href = 'login.html';
-	}
-	}catch(e){
-		alert(e.message);
-	}
-}
+var socket = null;
+var timer = 0;
 var socket_port = 0;
 var socket_host = '';
 $.ajax({
@@ -62,317 +43,183 @@ $.ajax({
     }
 });
 $.getScript('http://'+socket_host+':'+socket_port+'/socket.io/socket.io.js');
-var SlideViewController = new SlideViewController();
-SlideViewController.socket_port = socket_port;
-SlideViewController.socket_host = socket_host;
-SlideViewController.user_id = $.cookie("registration_id");
-SlideViewController.activity_id = $.cookie("activity_id");
-SlideViewController.render();
+
+$(document).ready(function(){
+    attemptConnection();
+	displayFormFields();
+    $('#submitButton').click(function(e){
+        e.preventDefault();
+		$.ajax({
+			url:'http://'+socket_host+'/arraylearn/client/login',
+			type: 'POST',
+			dataType: 'json',
+			data: $('#client_entry').serialize(),
+			complete: function(response){
+				var responseObj = $.parseJSON(response.responseText);
+				if (responseObj.registration_id != undefined) {
+					$.cookie("registration_id", responseObj.registration_id);
+					$.cookie("activity_id", responseObj.activity_id);
+					window.location = 'view.html';
+				} else {
+					$('#feedback').html(responseObj.feedback);
+					$('#feedback').css('display', 'block');
+				}
+			}
+		});
+	});
+});
+var displayFormFields = function()
+{
+	var loginSettings = {};
+	$.ajax({
+		url: "http://"+socket_host+"/arraylearn/client/index",
+		dataType:"json",
+		type: "GET",
+		async: false,
+		complete: function(response){
+			loginSettings = $.parseJSON(response.responseText);
+		}
+	});
+	if (loginSettings.redirect) {
+		if (loginSettings.location == 'no-activity-running') {
+			window.location.href = 'noactivity.html';
+		}
+		if (loginSettings.location == 'view') {
+			$.cookie("registration_id", loginSettings.registration_id);
+			$.cookie("activity_id", loginSettings.activity_id);
+			window.location.href = 'view.html';
+		}
+	}
+	loginSettings.display_feedback = false;
+	if (loginSettings.feedback != null) {
+		loginSettings.display_feedback = true;
+	}
+	loginSettings.login_text = getLoginText(loginSettings);
+	var template_source = $("#formfield-template").html();
+	var compiled = Handlebars.compile(template_source);
+	$('#formfields').html(compiled(loginSettings));
+}
+var getLoginText = function(loginSettings) {
+	if ((loginSettings.settings.loginText != null) && (loginSettings.settings.loginText != '')){
+		return loginSettings.settings.loginText;
+	}
+	if ((loginSettings.activity.emailRequired) && (!loginSettings.activity.disableAccessCode)) {
+		return 'To enter this activity you must create a user profile. If you need assistance, please see any of the Educational Measures Team.';
+	} else if (loginSettings.activity.emailRequired) {
+		return 'To enter this activity you must provide an email address.';
+	} else {
+		return 'To enter this activity you must provide an access code. You should already have been informed of the access code but if you do not know the access code, please see any of the Educational Measures team.';
+	}
+}
+var attemptConnection = function() {
+	if ((socket == null) || (!socket.socket.connected)) {
+        if ((typeof io != "undefined")) {
+            //IF SOCKET NOT FOUND
+            if((socket == null) || (!socket.socket.connecting)) {
+                socket = io.connect('http://'+socket_host+':'+socket_port);
+                socket.on('activityHasStopped', function(){
+                    window.location.href='no-activity-running.html';
+                });
+                socket.on('disconnect', function(){
+                	timer = setInterval(attemptConnection, 6000);
+                });
+                socket.on('refreshClientDevices', function(){
+			location.reload();
+                });
+            }else{
+            	clearInterval(timer);
+            }
+        }
+    }
+};
 </script>
-<link rel="stylesheet" type="text/css" href="css/jchartfx.css">
-<link rel="stylesheet" type="text/css" href="css/slide-view.css">
+<script>
+$(document).bind('mobileinit',function(){
+	$.mobile.page.prototype.options.keepNative = "#keepNative select, #keepNative input, #keepNative textarea";
+});
+</script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script src="js/jquery.mobile-1.3.1.min.js"></script>
+<script>
+var validate = function() {
+	//test if email is an email
+	if(typeof $("#email").val()!=='undefined'){
+		var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+		if($("#email").val()){
+			if( !emailReg.test( $("#email").val() ) ) {
+				$("#feedback").html('Email is not valid');
+				$("#feedback").show();
+				return false;
+			}
+		}
+	}
+	return true;
+};
+</script>
+<script id="formfield-template" type="text/x-handlebars-template">
+	<fieldset>
+		<!-- INCLUDE DYNAMIC TITLE HERE -->
+		<h1>{{activity.name}}</h1>
+		<div id="feedback" style="display:none"></div>
+		<p class="info">{{login_text}}</p>
+		{{#unless activity.disableUserEmail}}
+			{{#if activity.emailRequired}}
+				<span class="colorred">*</span>
+			{{/if}}
+			<div class="form-group">
+				<label for="email">
+				{{#if activity.emailRequired}}
+					Email address:
+				{{else}}
+					Email address (optional):
+				{{/if}}
+				</label>
+				<input type="email" name="email" id="email" class="span12">
+			</div><!--/form-group-->
+		{{/unless}}
+		{{#unless activity.disableAccessCode}}
+		<div class="form-group">
+			<label for="access_code"><span class="colorred">*</span> Access Code:</label>
+			<input type="text" name="access_code" id="access_code" class="span12">
+		</div><!--/form-group-->
+		{{/unless}}
+
+		<input type="submit" value="Enter" id="submitButton" class="btn btn-primary btn-large btn-block">
+		<p class="req_blurb"><span class="colorred">*</span> = required</p>
+	</fieldset>
+</script>
+<style>
+p.req_blurb{
+	font-size:10px;
+	width:auto;
+	margin-left:auto;
+	margin-right:auto;
+}
+p.info{
+	font-size:16px;
+}
+div#feedback{
+	border:1px solid #000;
+	background-color:red;
+	color:#FFF;
+	margin:10px;
+	padding:10px;
+}
+
+</style>
 <link rel="stylesheet" type="text/css" href="http://arraylearn.com/arraylearn/slide-view/css">
 
-<script type="text/javascript" src="js/jchartfx/jchartfx.system.js"></script>
-<script type="text/javascript" src="js/handlebars-v1.1.2.js"></script>
-<script type="text/javascript" src="js/jchartfx/jchartfx.coreVector.js"></script>
-<script type="text/javascript" src="js/jchartfx/jchartfx.handdrawn.js"></script>
-<script type="text/javascript" src="js/jchartfx/jchartfx.coreVector3d.js"></script>
-<script type="text/javascript" src="js/jchartfx/jchartfx.animation.js"></script>
-<script type="text/javascript" src="js/arraylearn/FacultyQuestionController.js"></script>
-<script type="text/javascript" src="js/arraylearn/SlideNotesController.js"></script>
-<script type="text/javascript" src="js/arraylearn/SurveyDesignView.js"></script>
-<script type="text/javascript" src="js/arraylearn/ChartingController.js"></script>
-<script type="text/javascript">
-$(document).ready(function() {
-	document.addEventListener("deviceready", testLogin, false);
-    SlideViewController.slidePull();
-    SlideViewController.displayRating();
-    SlideViewController.displaySidebar();
-    SlideViewController.displayFacultyQuestion();
-    SlideViewController.displaySlideNote();
-    var hash = window.location.hash
-    if ( hash=='#slideNote' ){
-        $('#slideNoteButton').trigger('click');
-        document.location.hash = '';
-    }
-    $("#facultyQuestionButton, #facultyQuestionIcon").click(function() {
-        $('#question').val('');
-        $("#questionSlideImg").attr("src", $("#theSlide").attr("src"));
-        $('.questions-container').show();
-        $('#slideContainer').hide();
-        $(window).scrollTop(0);
-        FacultyQuestionController.render(SlideViewController.activity_id, SlideViewController.user_id);
-    });
-});
-</script>
-<script type="text/javascript" src="js/arraylearn/SlideView.js"></script>
-<script id="ratings-template" type="text/x-handlebars-template">
-    <div class="pull-right">
-        <div class="pull-left largertopmargin">
-            <p class="largefont">Rate slide:</p>
-        </div>
-        <div id="rating_1" class="ratings pull-right">
-            {{#each rating}}
-                {{#if this.star}}
-                    <div class="star_{{@key}} ratings_stars ratings_blank ratings_vote" id="{{@key}}"></div>
-                {{else}}
-                    <div class="star_{{@key}} ratings_stars ratings_blank" id="{{@key}}"></div>
-                {{/if}}
-            {{/each}}
-            <div class="total_votes"><p class="voted smallfont"></p></div>
-        </div>
-    </div>
-</script>
-<script id="sidebar-template" type="text/x-handlebars-template">
-    <div id="image-container" class="hidden-phone">
-        <a href="#" id="showSlideArea"><img src="{{logo}}" alt="{{logotext}}" title="{{logotext}}"></a>
-    </div><!--/image-container-->
-
-    <div id="button-container">
-        <!-- DEFAULT BUTTONS W/ MULTI-COLOR ICONS  -->
-        <a href="#" class="btn btn-block btn-large" id="presentationButton"><i class="array-icon array-presentation-red"></i><span class="hide-btn-name"> Presentation</span></a>
-        {{#each buttons}}
-            <a onclick="window.open('http://'+socket_host+'{{this.url}}', '_blank', 'location=yes,toolbar=yes,EnableViewPortScale=yes');" class="btn btn-block btn-large">
-            <i class="array-icon {{this.logoPath}}"  style="margin-right:5px;"></i>
-            <span class="hide-btn-name">{{this.name}} </span>
-            <img src="img/icons/new-banner.png" class="new-btn-banner" style="display:none;">
-            </a>
-        {{/each}}
-    </div><!--/button-container-->
-    <hr>
-    <div id="control-container">
-        {{#if allow_faculty_question}}
-            <a href="#" class="btn btn-block btn-large" id="facultyQuestionButton">
-                <i class="array-icon {{askAQuestionIcon}}"></i>
-                <span class="hide-btn-name"> {{askAQuestionCustom}}</span>
-            </a>
-        {{/if}}
-        {{#if allow_slide_notes}}
-            <a href="#" class="btn btn-block btn-large" id="slideNoteButton">
-                <i class="array-icon {{takeSlideNoteIcon}}"></i>
-                <span class="hide-btn-name"> {{takeSlideNoteCustom}}</span>
-            </a>
-        {{/if}}
-        {{#if allow_stylus_notes}}
-            <a href="#" class="btn btn-block btn-large hidden-phone" id="slideNoteButtonStylus">
-                <i class="array-icon {{takeStylusNoteIcon}}"></i>
-                <span class="hide-btn-name"> {{takeStylusNoteCustom}}</span>
-            </a>
-        {{/if}}
-        <a href="#" class="btn btn-block btn-large" onclick="window.location.href = index.html">
-            <i class="array-icon {{refreshPageIcon}}"></i>
-            <span class="hide-btn-name"> {{refreshPageCustom}}</span>
-        </a>
-    </div><!--/control-container-->
-</script>
-<script id="faculty-question-template" type="text/x-handlebars-template">
-<!-- Ask a Question | Success Confirmation Modal -->
-<div class="modal hide" id="questionSuccessModal">
-	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3>Thank you!</h3>
-	</div>
-	<div class="modal-body">
-		<p>Your question has been submitted.</p>
-	</div>
-	<div class="modal-footer">
-		<a href="#" class="btn" data-dismiss="modal">Dismiss</a>
-	</div>
-</div>
-
-<!-- Ask a Question View -->
-<div id="main_content" class="container-fluid questions-container" style="display:none;">
-	<!-- slide wrapper -->
-	<div class="row-fluid">
-		<div class="span5 negativelargertopmargin" id="changeMarginQ">
-			<h2 class="pull-left">Ask a Question</h2>
-			<div class="clear alert alert-block alert-error" id="questionFailAlert" style="display:none;">
-	            <button type="button" class="close" data-dismiss="alert">&times;</button>
-	            <h4 class="alert-heading">Error</h4>
-	            <p>There was an error submitting your faculty question.</p>
-	            <a class="btn" href="#" data-dismiss="alert">Dismiss</a>
-	          </div>
-
-			<!-- <i class="micon-flag pull-right largepadding"></i> -->
-			<div class="clear"></div>
-			<div id="faculty_question_feedback" style="display:none;"></div>
-		    <form enctype="multipart/form-data" name="faculty_question" id="faculty_question" method="POST">
-		    	<fieldset>
-					<div class="control-group">
-						<div class="controls">
-				    		<textarea name="question" id="question" class="span12" rows="6"></textarea>
-				    		<span class="help-block" style="display:none;">Please enter a question.</span>
-						</div>
-					</div>
-
-				    <div id="facultyQuestionSubmit" class="pull-right">
-				    	<input type="button" value="Cancel" class="btn" id="cancelQuestion">
-				    	<input onclick="FacultyQuestionController.process();" data-role="none" type="button" value="Submit Question" class="btn btn-primary btn-large">
-				    </div><!--/facultyQuestionSubmit-->
-
-					<div id="show-slide-container-q" style="display:none;">
-						<a href="#" id="show-slide-q"><i class="micon-arrow-down-6"></i>&nbsp;Show Slide</a>
-					</div><!--/show-slide-container-->
-				</fieldset>
-			</form>
-		</div><!--/span-->
-		<div class="span7 noleftmargin" id="hide-slide-wrapper-q">
-			<div id="image-container-question" class="span11">
-
-				<div id="hide-slide-container-q" class="hidden-phone">
-					<a href="#" id="hide-slide-q"><i class="micon-arrow-down-6"></i>&nbsp;Hide Slide</a>
-				</div><!--image-container-notes-->
-				<div id="question-slide-image-container"><img src="" id="questionSlideImg"></div>
-			</div><!--hide-slide-wrapper-->
-		</div><!--/span-->
-	</div><!--/row-fluid -->
-</div><!-- end main content -->
-<!--/ END - Ask a question view -->
-</script>
-<script id="slide-note-template" type="text/x-handlebars-template">
-<!-- Take a Note | Success Confirmation Modal -->
-<div class="modal hide" id="noteSuccessModal">
-	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3>Success!</h3>
-	</div>
-	<div class="modal-body">
-		<p>Your note has been saved.</p>
-	</div>
-	<div class="modal-footer">
-		<a href="#" class="btn" data-dismiss="modal">Dismiss</a>
-	</div>
-</div>
-<!-- Take a Note View -->
-<div id="main_content" class="container-fluid notes-container" style="display:none;">
-	<!-- slide wrapper -->
-	<div class="row-fluid">
-		<div class="span5 negativelargertopmargin" id="changeMargin">
-			{{#if allow_stylus_notes}}
-			<h2 class="pull-left">Note <span class="regularfont hidden-phone"><a href="#" id="stylus-link">Take note with Stylus &raquo;</a></span></h2>
-			{{/if}}
-			<form enctype="multipart/form-data" name="slide_note" id="slide_note" method="POST" class="clear">
-				<fieldset>
-					<div class="form-group">
-
-							<div class="email-note control-group">
-								<div class="controls">
-								<div id="error_message" style="color:red;font-weight:bold;display:none;">Please enter a valid email address</div>
-        						{{#unless email}}
-								<label class="control-label" for="email" id="emailLabel">
-                                    <span style="color:red;">*</span>
-                                    Please enter your email address:
-                                </label>
-									<input type="text" name="email" id="email" class="span12">
-                                {{/unless}}
-								</div><!--/controls-->
-							</div><!--/email control group-->
-					</div><!--/form-group-->
-					<div class="form-group">
-						<div class="note-text control-group">
-							<div class="controls">
-								<div id="error_message_note" style="color:red;font-weight:bold;display:none;">Please enter a note</div>
-								<label class="control-label" for="email"><span style="color:red;">*</span> Please enter your note:</label>
-								<textarea name="text" id="text" style="height:{{height}}" class="span12"></textarea>
-							</div><!--/controls-->
-						</div><!--/control-group-->
-					</div><!--/form-group-->
-
-
-					<input type="hidden" name="current_slide" id="note-slide-id">
-					<input type="hidden" name="activity_id" value="{{activity_id}}">
-
-
-					<div id="slideNoteSubmit" class="pull-right">
-						<input id="cancelNote" class="btn" value="Cancel" type="button">
-						<!-- <span data-role="none" class="ui-btn-inner ui-btn-corner-all" aria-hidden="true"><span data-role="none" class="ui-btn-text">Submit</span></span> -->
-						<input onclick="return SlideNotesController.process();" data-role="none" type="button" value="Save Note" class="btn btn-primary btn-large">
-					</div><!--/slideNoteSubmit-->
-
-					<!-- <span data-role="none" class="ui-btn-inner ui-btn-corner-all" aria-hidden="true"><span data-role="none" class="ui-btn-text">Cancel</span></span> -->
-					<!-- <input onclick="$('.ui-dialog').dialog('close');" data-role="none" type="button" value="Cancel" data-theme="b" class="ui-btn-hidden" aria-disabled="false"> -->
-
-					<div id="show-slide-container" style="display:none;">
-						<a href="#" id="show-slide"><i class="micon-arrow-down-6"></i>&nbsp;Show Slide</a>
-					</div><!--/show-slide-container-->
-
-
-				</fieldset>
-			</form>
-		</div><!--/span-->
-		<div class="span7 noleftmargin" id="hide-slide-wrapper">
-			<div id="image-container-notes" class="span11">
-				<div id="hide-slide-container" class="hidden-phone">
-					<a href="#" id="hide-slide"><i class="micon-arrow-down-6"></i>&nbsp;Hide Slide</a>
-				</div><!--image-container-notes-->
-				<div id="notes-slide-image-container"><img src="" id="noteSlideImg"></div>
-			</div><!--hide-slide-wrapper-->
-		</div><!--/span-->
-	</div><!--/row-fluid -->
-</div><!-- end main content -->
-<!--/ END take a note view -->
-</script>
-
-<div data-role="page" id="slideContainer">
-	<div id="main_content" class="container-fluid">
-		<div class="row-fluid" id="animate">
-			<div style="display:none;" id="iframeContainer">
-				<div class="pull-left hidden-phone" id="fullScreenFrame">
-					<i class="multicolor-icon mci-full-screen"></i> <span class="pull-right">Display Full Screen</span>
-				</div><!--/fullScreen-->
-
-				<div id="fullScreenSliderWrapper" style="display:none;">
-                <div id="hamburgerWrapperFrame" class="hidden-phone span3" style="display:none;">
-                        <!-- Full screen menu -->
-                        <div class="pull-left largeleftmargin" id="hamburgerFrame">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div><!--/ full screen menu-->
-                        <p class="hidden-phone" style="margin-top: 13px; margin-left: 4px; font-size: 12px; cursor:pointer; padding-left: 45px; ">Show Navigation</p>
-                </div><!--/hamburgerWrapperFrame-->
-				</div>
-				<iframe name="iframeContent" id="iframeSize"></iframe>
-			</div>
-
-			<div id="slideAreaWrapper" class="span10">
-				<div class="span12" id="fullScreenWrapper">
-					<div class="pull-left noleftmargin hidden-phone mediumtopmargin" id="fullScreen">
-						<i class="multicolor-icon mci-full-screen"></i> <span class="pull-right">Display Full Screen</span>
-					</div><!--/fullScreen-->
-					<div id="ratings_div"></div>
-
-					<div id="hamburgerWrapper" class="mediumtopmargin hidden-phone" style="display:none;">
-						<!-- Full screen menu -->
-						<div class="pull-left largeleftmargin hidden-phone" id="hamburger">
-							<div></div>
-							<div></div>
-							<div></div>
-						</div><!--/ full screen menu-->
-						<p class="span3" style="margin-top: 6px; margin-left: 4px; font-size: 12px; cursor:pointer;">Show Navigation</p>
-					</div><!--/hamburgerWrapper-->
-
-
-				</div><!--/span12 smalltopmargin-->
-				<div id="slideArea" style="text-align: center;">
-					<!-- switch to form here based on the slide type -->
-                                </div>
-			</div><!--/span10-->
-			<div class="span2" id="hideFS">
-			</div><!--/span3-->
-		</div><!--/row-fluid-->
-	</div><!--/grid-->
-</div><!--/page-->
-<div id="notequestiondiv"></div>
-<script src="js/jquery-ui.min.js"></script>
-<script src="js/jquery-ui-touch-punch.js"></script>
-<script>
-$(window).load(function() {
-    if (SlideViewController.settings.toggleFullscreen == true) {
-        $( "#fullScreen" ).trigger('click');
-    }
-});
-</script>
+<!-- Login View -->
+<div id="main_content" class="container-fluid login-container">
+	<div class="row-fluid" id="keepNative">
+		<div class="span12 largesttopmargin">
+			<div class="form-float">
+		    	<form data-ajax="false" action="/arraylearn/client/login" enctype="multipart/form-data" name="client_entry" id="client_entry" method="POST" onsubmit="return validate(this);">
+				<div id="formfields"></div>
+				</form>
+			</div><!--/form-float-->
+		</div><!--/span12-->
+	</div><!--/row-fluid-->
+</div><!--/main_content-->
 </body>
 </html>
