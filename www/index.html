@@ -40,8 +40,12 @@
 <script src="js/arraylearn/SlideViewController.js"></script>
 <script type="text/javascript">
 function testLogin() {
+try {
 	if (($.cookie("registration_id") == null) || ($.cookie("registration_id") == undefined)) {
 		window.location.href = 'login.html';
+	}
+	catch(e){
+		navigator.notification.alert(e.message, null, 'Notification');
 	}
 }
 var socket_port = 0;
