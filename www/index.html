@@ -87,7 +87,9 @@ var displayFormFields = function()
 		if (loginSettings.location == 'view') {
 			$.cookie("registration_id", loginSettings.registration_id);
 			$.cookie("activity_id", loginSettings.activity_id);
+			setTimeout(function(){
 			window.location.href = 'view.html';
+			}, 3000);
 		}
 	}
 	loginSettings.display_feedback = false;
