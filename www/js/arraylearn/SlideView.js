@@ -1,78 +1,54 @@
 $(document).ready(function() {
 $(function() {
-        $('.iframe-button').click(function() {
-                   		    
-        	var windowSize = $(window).width();
-			if (windowSize <= 700) {
-				//alert('you are on a small window');
-		        $('#slideContainer .span2').css('position', 'relative');
-	            $('#iframeContainer').show().css('width', '100%').css('height','300px');
-	            $('#hideFS').css('margin-left', '0');
-	            $('#slideContainer #main_content').css('padding', '0px 0px 0 0px');
-	            $('#fullScreen').hide();
-	            $('#hamburgerWrapper').show(); // show fullscreen
-	            $('#fullScreenFrame').hide();
-	            $('#hamburgerWrapperFrame').fadeIn(); // show fullscreen
-	            $('#iframeContainer').show();
-	            $('#slideAreaWrapper').hide();
-	            
-	            if ($(this).attr('href').match(/\.(jpg|png|gif)/i)) {
-	        	//alert('contains jpg, png or gif');
-	        	$('#fullScreenSliderWrapper').show();
-	            $('#resourceSlider').show();
-	            
-	            } else if ($(this.href.indexOf('activity_files') != -1) && $(this).attr('href').match(/\.(html)/i)) {
-			        //alert("Contains activity_files and html extension");
-			        $('#fullScreenSliderWrapper').hide(); // hide on small screens
-			        $('#resourceSlider').hide();
-			        
-			    } else if ($(this.href.indexOf('http://www') != -1)) {
-				    //alert("Web link - don't show");
-				    $('#fullScreenSliderWrapper').hide(); // hide on small 
-			        $('#resourceSlider').hide();
-			    } 
-			    
-			    if ($(this).attr('href').match(/\.(pdf)/i)) {
-				    //alert("This must be pdf");
-				    $('#fullScreenSliderWrapper').show();
-			        $('#resourceSlider').show();
-			    }
-		        
-	        } else {
-	        	
-	            $('#animate').animate({'left': '-27%'});
-	            $('#hideFS').animate({'left': '-27%'});
-	            $('#iframeContainer').show().css('width', '100%');
-	            $('#fullScreen').hide();
-	            $('#hamburgerWrapper').show(); // show fullscreen
-	            $('#fullScreenFrame').hide();
-	            $('#hamburgerWrapperFrame').fadeIn(); // show fullscreen
-	            $('#iframeContainer').show();
-	            $('#slideAreaWrapper').hide();
-	            
-	            if ($(this).attr('href').match(/\.(jpg|png|gif)/i)) {
-	        	//alert('contains jpg, png or gif');
-	        	$('#fullScreenSliderWrapper').show();
-	            $('#resourceSlider').show();
-	            
-	            } else if ($(this.href.indexOf('activity_files') != -1) && $(this).attr('href').match(/\.(html)/i)) {
-			        //alert("Contains activity_files and html extension");
-			        $('#fullScreenSliderWrapper').show();
-			        $('#resourceSlider').hide();
-			        
-			    } else if ($(this.href.indexOf('http://www') != -1)) {
-				    //alert("Web link - don't show");
-				    $('#fullScreenSliderWrapper').show(); // show on larger screens
-			        $('#resourceSlider').hide();
-			    } 
-			    
-			    if ($(this).attr('href').match(/\.(pdf)/i)) {
-				    //alert("This must be pdf");
-				    $('#fullScreenSliderWrapper').show();
-			        $('#resourceSlider').show();
-			    }
+    $('.iframe-button').click(function() {
+        var windowSize = $(window).width();
+        if ( $(this).attr('fullscreen')==1 ) {
+            if (windowSize <= 700) {
+                //alert('you are on a small window');
+                $('#slideContainer .span2').css('position', 'relative');
+                $('#iframeContainer').show().css('width', '100%').css('height','300px');
+                $('#hideFS').css('margin-left', '0');
+                $('#slideContainer #main_content').css('padding', '0px 0px 0 0px');
+
+            } else {
+
+                $('#animate').animate({'left': '-27%'});
+                $('#hideFS').animate({'left': '-27%'});
+                $('#iframeContainer').show().css('width', '100%');
             }
-        });
+            $('#fullScreen').hide();
+            $('#hamburgerWrapper').show(); // show fullscreen
+            $('#fullScreenFrame').hide();
+            $('#hamburgerWrapperFrame').fadeIn(); // show fullscreen            
+        }
+        
+        $('#iframeContainer').show();
+        $('#slideAreaWrapper').hide();        
+        if ($(this).attr('href').match(/\.(jpg|png|gif)/i)) {
+            //alert('contains jpg, png or gif');
+            $('#fullScreenSliderWrapper').show();
+            $('#resourceSlider').show();
+        } else if ($(this.href.indexOf('activity_files') != -1) && $(this).attr('href').match(/\.(html)/i)) {
+            //alert("Contains activity_files and html extension");
+            if (windowSize <= 700)
+                $('#fullScreenSliderWrapper').hide();  // hide on small screens 
+            else
+                $('#fullScreenSliderWrapper').show();   // show on larger screens 
+            $('#resourceSlider').hide();
+        } else if ($(this.href.indexOf('http://www') != -1)) {
+            //alert("Web link - don't show");
+            if (windowSize <= 700)
+                $('#fullScreenSliderWrapper').hide(); // hide on small screens 
+            else
+                $('#fullScreenSliderWrapper').show(); // show on larger screens 
+            $('#resourceSlider').hide();
+        } 
+        if ($(this).attr('href').match(/\.(pdf)/i)) {
+            //alert("This must be pdf");
+            $('#fullScreenSliderWrapper').show();
+            $('#resourceSlider').show();
+        }            
+    });
 
         $('#showSlideArea').click(function() {
             $('#slideAreaWrapper').show();

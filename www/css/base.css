@@ -220,6 +220,10 @@ a.bttn {
 	border-top: none;
 	font-size: 18px;
 }
+.gridview {
+    border: 1px solid #000;
+    
+}
 #slideArea span {
 	line-height: 28px;
 	font-size: 18px;

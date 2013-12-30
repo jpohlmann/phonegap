@@ -197,14 +197,16 @@ SlideDashboardController = function() {
                             if(data.interval_id!=1){
                                     intervalText = "<span style='color:#94e24e;'>POST</span>";
                             }
-                            var alias = data.hover_title.split(':');
+                            var qa = data.hover_title.split('###');
+                            var answers = qa[1];
+                            var alias = qa[0].split(':');
                             if(SlideDashboardController.slideToTypeMapping[index]=='QUESTION'){
-                                    alias = "Q: "+alias[0].substr(0,255);
-                                    $(e.thumbTarget).parent().append('<div class="galleria-slide-type response" slidenumber="'+index+'" style="z-index:1000;margin-top:10px;margin-bottom:10px;height:150px;">'+intervalText+'<br />'+alias+'<br /><span style="font-size:12px;" id="respcount_'+index+'">('+SlideDashboardController.slideResponseCount[index]+')</span></div>'); //('+slide_response_count[index]+')
+                                    alias = "Q: "+alias[0].substr(0,255) + '<br/>' + answers;
+                                    $(e.thumbTarget).parent().append('<div class="galleria-slide-type response" slidenumber="'+index+'" style="z-index:1000;margin-top:10px;margin-bottom:10px;height:150px;">'+intervalText+'<br />'+alias+'<br /><span style="font-size:12px;" id="respcount_'+data.question_id+'">('+SlideDashboardController.slideResponseCount[index]+')</span></div>'); //('+slide_response_count[index]+')
                             }else{
-                                    alias = "R: "+alias[0].substr(0,255);
+                                    alias = "R: "+alias[0].substr(0,255) + '<br/>' + answers;
                                     //we add a class and an attribute to this so we can update the response count later
-                                    $(e.thumbTarget).parent().append('<div class="galleria-slide-type response" slidenumber="'+index+'" style="z-index:1000;margin-top:10px;height:150px;">'+intervalText+'<br />'+alias+'<br /><span style="font-size:12px;" id="respcount_'+index+'">('+SlideDashboardController.slideResponseCount[index]+')</span></div>');
+                                    $(e.thumbTarget).parent().append('<div class="galleria-slide-type response" slidenumber="'+index+'" style="z-index:1000;margin-top:10px;height:150px;">'+intervalText+'<br />'+alias+'<br /><span style="font-size:12px;" id="respcount_'+data.question_id+'">('+SlideDashboardController.slideResponseCount[index]+')</span></div>');
                             }
                     }else{
                             $(e.thumbTarget).parent().append('<div class="galleria-slide-type" style="z-index:1000;height:130px;">&nbsp;</div>');
@@ -227,11 +229,14 @@ SlideDashboardController = function() {
                     if(nextSlide.interval_id!=1){
                             intervalText = "<span style='color:#94e24e;'>POST</span>";
                     }
-                    var alias = nextSlide.hover_title.split(':');
+                    var qa = nextSlide.hover_title.split('###');
+                    var answers = qa[1];
+                    var alias = qa[0].split(':');
+                    
                     if(nextSlide.type=='QUESTION'){
-                        alias = "Q: "+alias[0].substr(0,255);
+                        alias = "Q: "+alias[0].substr(0,255) + '<br/>' + answers;
                     }else{
-                        alias = "R: "+alias[0].substr(0,255);
+                        alias = "R: "+alias[0].substr(0,255) + '<br/>' + answers;
                     }
                     $("#nextSlideContainer_test").html('<div style="margin-left:auto;margin-right:auto;text-align:center;width:300px;height:225px;border:1px solid #000;background-color:#FFF;"><br />'+intervalText+'<br /><br />'+alias+'</div>');
                 }else{

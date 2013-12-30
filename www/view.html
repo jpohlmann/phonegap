@@ -129,7 +129,7 @@ $(document).ready(function() {
         <!-- DEFAULT BUTTONS W/ MULTI-COLOR ICONS  -->
         <a href="#" class="btn btn-block btn-large" id="presentationButton"><i class="array-icon array-presentation-red"></i><span class="hide-btn-name"> Presentation</span></a>
         {{#each buttons}}
-            <a onclick="window.open('http://'+socket_host+'{{this.url}}', '_blank', 'location=yes,toolbar=yes,EnableViewPortScale=yes');" class="btn btn-block btn-large">
+            <a onclick="window.open('http://'+socket_host+'{{this.url}}', '_blank', 'location=yes,toolbar=yes,EnableViewPortScale=yes');" class="btn btn-block btn-large"  fullscreen="{{this.toggleFullscreen}}">
             <i class="array-icon {{this.logoPath}}"  style="margin-right:5px;"></i>
             <span class="hide-btn-name">{{this.name}} </span>
             <img src="img/icons/new-banner.png" class="new-btn-banner" style="display:none;">
