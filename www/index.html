@@ -12,18 +12,18 @@
 		<script type="text/javascript" src="phonegap.js"></script>
 		<script type="text/css" src="css/720_grid.css"></script>
 		<script type="text/javascript" src="js/html5.js"></script>
-<link href="css/jquery.mobile-1.3.1.min.css" media="screen" rel="stylesheet" type="text/css">
-<link href="css/720_grid.css" media="screen and (min-width: 720px)" rel="stylesheet" type="text/css">
-<link href="css/986_grid.css" media="screen and (min-width: 986px)" rel="stylesheet" type="text/css">
-<link href="css/1236_grid.css" media="screen and (min-width: 1236px)" rel="stylesheet" type="text/css">
-<link href="css/bootstrap.min.css" rel="stylesheet">
-<link href="css/bootstrap-responsive.min.css" rel="stylesheet">
-<link href="css/style.css" rel="stylesheet">
-<link href="css/mobile.css" rel="stylesheet">
-<script src="js/jquery.min.js"></script>
-<script src="js/jquery.cookie.js"></script>
-<script type="text/javascript" src="phonegap.js"></script>
-<script type="text/javascript" src="js/handlebars-v1.1.2.js"></script>
+		<link href="css/jquery.mobile-1.3.1.min.css" media="screen" rel="stylesheet" type="text/css">
+		<link href="css/720_grid.css" media="screen and (min-width: 720px)" rel="stylesheet" type="text/css">
+		<link href="css/986_grid.css" media="screen and (min-width: 986px)" rel="stylesheet" type="text/css">
+		<link href="css/1236_grid.css" media="screen and (min-width: 1236px)" rel="stylesheet" type="text/css">
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+		<link href="css/style.css" rel="stylesheet">
+		<link href="css/mobile.css" rel="stylesheet">
+		<script src="js/jquery.min.js"></script>
+		<script src="js/jquery.cookie.js"></script>
+		<script type="text/javascript" src="phonegap.js"></script>
+		<script type="text/javascript" src="js/handlebars-v1.1.2.js"></script>
     </head>
     <body>
 <script type="text/javascript">
@@ -43,7 +43,14 @@ $.ajax({
     }
 });
 $.getScript('http://'+socket_host+':'+socket_port+'/socket.io/socket.io.js');
-
+$.ajax({
+	url: "http://"+socket_host+"/arraylearn/client/clear-session",
+	dataType:"json",
+	type: "GET",
+	async: false
+});
+$.removeCookie("registration_id");
+$.removeCookie("activity_id");
 $(document).ready(function(){
     attemptConnection();
 	displayFormFields();
