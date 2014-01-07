@@ -323,6 +323,8 @@ SlideViewController = function() {
                             $.cookie('activity_id', null, { path: '/' });
                             $.cookie('registration_id', null, { path: '/' });
                             $.cookie('attendee_id', null, { path: '/' });
+							$.removeCookie("registration_id");
+							$.removeCookie("activity_id");
                             window.location.reload();
                         }, rand);
                     });                    
