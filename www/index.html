@@ -133,7 +133,7 @@ var attemptConnection = function() {
                 	timer = setInterval(attemptConnection, 6000);
                 });
                 socket.on('refreshClientDevices', function(){
-			location.reload();
+					location.reload();
                 });
             }else{
             	clearInterval(timer);

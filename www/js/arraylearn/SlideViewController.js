@@ -314,6 +314,12 @@ SlideViewController = function() {
                     this.socket.on('clearClientCookies', function () {
                         var rand = parseInt(Math.floor((Math.random()*9)+1)) + 1000; //randomize up to 10 seconds
                         setTimeout(function(){
+							$.ajax({
+								url: "http://"+SlideViewController.socket_host+"/arraylearn/client/clear-session",
+								dataType:"json",
+								type: "GET",
+								async: false
+							});
                             $.cookie('activity_id', null, { path: '/' });
                             $.cookie('registration_id', null, { path: '/' });
                             $.cookie('attendee_id', null, { path: '/' });
