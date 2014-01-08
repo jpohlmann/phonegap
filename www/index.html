@@ -49,8 +49,9 @@ $.ajax({
 	type: "GET",
 	async: false
 });
-$.cookie("registration_id", null);
-$.cookie("activity_id", null);
+$.cookie('activity_id', null, { path: '/' });
+$.cookie('registration_id', null, { path: '/' });
+$.cookie('attendee_id', null, { path: '/' });
 $.removeCookie("registration_id");
 $.removeCookie("activity_id");
 $(document).ready(function(){
