@@ -39,6 +39,10 @@
     <body>
 <script src="js/arraylearn/SlideViewController.js"></script>
 <script type="text/javascript">
+function alertOnResume() {
+	alert('app resumed');
+}
+document.addEventListener("resume", alertOnResume, false);
 function testLogin() {
 	alert($.cookie("registration_id"));
 	if (($.cookie("registration_id") == null) || ($.cookie("registration_id") == "null") || ($.cookie("registration_id") == undefined)) {
