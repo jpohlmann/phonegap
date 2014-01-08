@@ -41,7 +41,7 @@
 <script type="text/javascript">
 function testLogin() {
 	alert($.cookie("registration_id"));
-	if (($.cookie("registration_id") == null) || ($.cookie("registration_id") == undefined)) {
+	if (($.cookie("registration_id") == null) || ($.cookie("registration_id") == "null") || ($.cookie("registration_id") == undefined)) {
 		alert('here');
 		window.location.href = 'index.html';
 	}
