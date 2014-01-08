@@ -87,7 +87,7 @@ var displayFormFields = function()
 		type: "GET",
 		async: false,
 		complete: function(response){
-			alert(response.responseText);
+			alert(response.responseText+' '+$.cookie("registration_id")+$.cookie("activity_id")+$.cookie("attendee_id"));
 			loginSettings = $.parseJSON(response.responseText);
 		}
 	});
