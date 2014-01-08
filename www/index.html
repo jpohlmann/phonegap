@@ -87,6 +87,7 @@ var displayFormFields = function()
 		type: "GET",
 		async: false,
 		complete: function(response){
+			alert(response.responseText);
 			loginSettings = $.parseJSON(response.responseText);
 		}
 	});
