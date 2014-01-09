@@ -47,7 +47,10 @@ $.ajax({
 	url: "http://"+socket_host+"/arraylearn/client/clear-session",
 	dataType:"json",
 	type: "GET",
-	async: false
+	async: false,
+	complete: function(response){
+		alert(response.responseText);
+	}
 });
 $.cookie('activity_id', null, { path: '/' });
 $.cookie('registration_id', null, { path: '/' });
