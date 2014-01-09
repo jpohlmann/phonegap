@@ -47,10 +47,7 @@ $.ajax({
 	url: "http://"+socket_host+"/arraylearn/client/clear-session",
 	dataType:"json",
 	type: "GET",
-	async: false,
-	complete: function(response){
-		alert(response.responseText);
-	}
+	async: false
 });
 $.cookie('activity_id', null, { path: '/' });
 $.cookie('registration_id', null, { path: '/' });
@@ -87,10 +84,13 @@ var displayFormFields = function()
 	$.ajax({
 		url: "http://"+socket_host+"/arraylearn/client/index",
 		dataType:"json",
+		headers: {
+			"Array-Registration-Id": $.cookie("registration_id"),
+			"Array-Activity-Id": $.cookie("activity_id")
+		},
 		type: "GET",
 		async: false,
 		complete: function(response){
-			alert(response.responseText+' '+$.cookie("registration_id")+$.cookie("activity_id")+$.cookie("attendee_id"));
 			loginSettings = $.parseJSON(response.responseText);
 		}
 	});
