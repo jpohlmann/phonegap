@@ -40,17 +40,11 @@
 <script src="js/arraylearn/SlideViewController.js"></script>
 <script type="text/javascript">
 function clearAndRefresh() {
-	$.cookie('activity_id', null, { path: '/' });
-	$.cookie('registration_id', null, { path: '/' });
-	$.cookie('attendee_id', null, { path: '/' });
-	$.removeCookie("registration_id");
-	$.removeCookie("activity_id");
-	window.location.reload();
+	window.location.href = 'index.html';
 }
 document.addEventListener("pause", clearAndRefresh, false);
 function testLogin() {
 	if (($.cookie("registration_id") == null) || ($.cookie("registration_id") == "null") || ($.cookie("registration_id") == undefined)) {
-		alert('here');
 		window.location.href = 'index.html';
 	}
 }
